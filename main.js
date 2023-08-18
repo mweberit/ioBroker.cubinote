@@ -133,7 +133,7 @@ class Cubinote extends utils.Adapter {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 		if (state.val != "" && id == "printMessage") {
-			
+			var print = state.val;
 			var timestamp = formatDate(new Date(), 'YYYY-MM-DD hh:mm:ss'); // 2021-02-23%2019:43:56
 var url = 'http://api.cubinote.com/home/printpaper' +
 '?appID=' + this.config.AppId + 
@@ -143,15 +143,15 @@ var url = 'http://api.cubinote.com/home/printpaper' +
 '&bindID=' + this.config.BindId +
 '&printcontent=T:';
 
-state = replaceAll(state, 'Ä', 'Ae');
-state = replaceAll(state, 'ä', 'ae');
-state = replaceAll(state, 'Ö', 'Oe');
-state = replaceAll(state, 'ö', 'oe');
-state = replaceAll(state, 'Ü', 'Ue');
-state = replaceAll(state, 'ü', 'ue');
-state = replaceAll(state, 'ß', 'ss');
+print = replaceAll(print, 'Ä', 'Ae');
+print = replaceAll(print, 'ä', 'ae');
+print = replaceAll(print, 'Ö', 'Oe');
+print = replaceAll(print, 'ö', 'oe');
+print = replaceAll(print, 'Ü', 'Ue');
+print = replaceAll(print, 'ü', 'ue');
+print = replaceAll(print, 'ß', 'ss');
 
-var base64 = new Buffer(state).toString('base64');
+var base64 = new Buffer(print).toString('base64');
 			this.log.info(url + base64);	
 //request(url + base64)
 			}
