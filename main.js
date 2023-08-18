@@ -143,13 +143,13 @@ var url = 'http://api.cubinote.com/home/printpaper' +
 '&bindID=' + this.config.BindId +
 '&printcontent=T:';
 
-print = replaceAll(print, 'Ä', 'Ae');
-print = replaceAll(print, 'ä', 'ae');
-print = replaceAll(print, 'Ö', 'Oe');
-print = replaceAll(print, 'ö', 'oe');
-print = replaceAll(print, 'Ü', 'Ue');
-print = replaceAll(print, 'ü', 'ue');
-print = replaceAll(print, 'ß', 'ss');
+print = print.replaceAll('Ä', 'Ae');
+print = print.replaceAll('ä', 'ae');
+print = print.replaceAll('Ö', 'Oe');
+print = print.replaceAll('ö', 'oe');
+print = print.replaceAll('Ü', 'Ue');
+print = print.replaceAll('ü', 'ue');
+print = print.replaceAll('ß', 'ss');
 
 var base64 = new Buffer(print).toString('base64');
 			this.log.info(url + base64);	
