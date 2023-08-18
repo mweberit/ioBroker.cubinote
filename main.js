@@ -10,7 +10,7 @@ const utils = require("@iobroker/adapter-core");
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
-var adapter = utils.adapter('cubinote);
+var adapter = utils.adapter('cubinote');
 const request = require('request');
 
 class Cubinote extends utils.Adapter {
