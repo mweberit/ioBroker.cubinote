@@ -159,6 +159,7 @@ var base64 = new Buffer(print).toString('base64');
 request({url:url + base64},
     function (error, response, body) {
 	    adapter.log.info(body);	
+	    //adapter.setStateAsync("printMessage", { val: '', ack: true });
 				        //log('1. request');
 				        //log('error: ' + error);
 				        //log('response: ' + JSON.stringify(response));
