@@ -134,7 +134,7 @@ class Cubinote extends utils.Adapter {
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 		if (state.val != "" && id.endsWith(".printMessage")) {
 			var print = state.val;
-			var timestamp = formatDate(new Date(), 'YYYY-MM-DD hh:mm:ss'); // 2021-02-23%2019:43:56
+			var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
 var url = 'http://api.cubinote.com/home/printpaper' +
 '?appID=' + this.config.AppId + 
 '&ak=' + this.config.AccessKey + 
