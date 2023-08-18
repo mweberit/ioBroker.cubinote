@@ -10,6 +10,7 @@ const utils = require("@iobroker/adapter-core");
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
+var adapter = utils.adapter('cubinote);
 const request = require('request');
 
 class Cubinote extends utils.Adapter {
@@ -155,7 +156,16 @@ print = WordWrap(print, 32);
 
 var base64 = new Buffer(print).toString('base64');
 			this.log.info(url + base64);	
-request(url + base64)
+request({url:url + base64},
+    function (error, response, body) {
+	    adapter.log.info(body);	
+				        //log('1. request');
+				        //log('error: ' + error);
+				        //log('response: ' + JSON.stringify(response));
+				        //log('body: ' + body);
+    })
+
+			
 			}
 		} else {
 			// The state was deleted
