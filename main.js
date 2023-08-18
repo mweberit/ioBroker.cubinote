@@ -150,10 +150,12 @@ print = print.replaceAll('ö', 'oe');
 print = print.replaceAll('Ü', 'Ue');
 print = print.replaceAll('ü', 'ue');
 print = print.replaceAll('ß', 'ss');
+			
+print = WordWrap(print, 32);
 
 var base64 = new Buffer(print).toString('base64');
 			this.log.info(url + base64);	
-//request(url + base64)
+request(url + base64)
 			}
 		} else {
 			// The state was deleted
@@ -191,3 +193,42 @@ if (require.main !== module) {
 	// otherwise start the instance directly
 	new Cubinote();
 }
+
+function WordWrap(text, max) {
+
+var lines = text.split('\n');
+
+text = '';
+
+
+lines.forEach(function(line) {
+
+while (line.length > max) {
+
+var lio = line.substring(0, max + 1).lastIndexOf(' ');
+
+if (lio > 0) {
+
+text = text + line.substring(0, lio) + '\n'
+
+line = line.substring(lio + 1);
+
+} else {
+
+text = text + line.substring(0, max) + '\n'
+
+line = line.substring(max + 1);
+
+}
+
+}
+
+text = text + line + '\n';
+
+});
+
+
+return text;
+
+}
+
