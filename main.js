@@ -10,6 +10,7 @@ const utils = require("@iobroker/adapter-core");
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
+const request = require('request');
 
 class Cubinote extends utils.Adapter {
 
@@ -133,7 +134,26 @@ class Cubinote extends utils.Adapter {
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 		if (state.val != "" && id == "printMessage") {
 			
-				
+			var timestamp = formatDate(new Date(), 'YYYY-MM-DD hh:mm:ss'); // 2021-02-23%2019:43:56
+var url = 'http://api.cubinote.com/home/printpaper' +
+'?appID=' + this.config.AppId + 
+'&ak=' + this.config.AccessKey + 
+'&timestamp=' + timestamp + 
+'&deviceID=' + this.config.DeviceId + 
+'&bindID=' + this.config.BindId +
+'&printcontent=T:';
+
+state = replaceAll(state, 'Ä', 'Ae');
+state = replaceAll(state, 'ä', 'ae');
+state = replaceAll(state, 'Ö', 'Oe');
+state = replaceAll(state, 'ö', 'oe');
+state = replaceAll(state, 'Ü', 'Ue');
+state = replaceAll(state, 'ü', 'ue');
+state = replaceAll(state, 'ß', 'ss');
+
+var base64 = new Buffer(state).toString('base64');
+			this.log.info(url + base64);	
+//request(url + base64)
 			}
 		} else {
 			// The state was deleted
