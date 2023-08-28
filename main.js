@@ -179,6 +179,7 @@ class Cubinote extends utils.Adapter {
 	 * @param {ioBroker.Message} obj
 	 */
 	onMessage(obj) {
+		this.log.info(obj.command + " -> " + obj.message);
 		if (typeof obj === "object" && obj.message) {
 			if (obj.command === "send") {
 				// e.g. send email or pushover or whatever
