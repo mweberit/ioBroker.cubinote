@@ -132,39 +132,9 @@ class Cubinote extends utils.Adapter {
 	onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		if (state.val != "" && id.endsWith(".printMessage")) {
-			var print = state.val;
-			var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
-			var url = 'http://api.cubinote.com/home/printpaper' +
-			'?appID=' + this.config.AppId + 
-			'&ak=' + this.config.AccessKey + 
-			'&timestamp=' + timestamp + 
-			'&deviceID=' + this.config.DeviceId + 
-			'&bindID=' + this.config.BindId +
-			'&printcontent=T:';
-			
-			print = print.replaceAll('Ä', 'Ae');
-			print = print.replaceAll('ä', 'ae');
-			print = print.replaceAll('Ö', 'Oe');
-			print = print.replaceAll('ö', 'oe');
-			print = print.replaceAll('Ü', 'Ue');
-			print = print.replaceAll('ü', 'ue');
-			print = print.replaceAll('ß', 'ss');
-						
-			print = WordWrap(print, 32);
-			
-			var base64 = new Buffer(print).toString('base64');
-						this.log.info(url + base64);	
-			request({url:url + base64},
-			    function (error, response, body) {
-				    adapter.log.info(body);	
-				    //adapter.setStateAsync("printMessage", { val: '', ack: true });
-							        //log('1. request');
-							        //log('error: ' + error);
-							        //log('response: ' + JSON.stringify(response));
-							        //log('body: ' + body);
-			    })
+			//this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			if (state.val != "" && id.endsWith(".printMessage")) {
+				PrintMessage(state.val);
 			}
 		} else {
 			// The state was deleted
@@ -183,7 +153,8 @@ class Cubinote extends utils.Adapter {
 		if (typeof obj === "object" && obj.message) {
 			if (obj.command === "send") {
 				// e.g. send email or pushover or whatever
-				this.log.info("send command " + obj.message.Meldung);
+                    		adapter.log.info(`Send ${obj.message.Meldung} to ${adapter.config.DeviceId}`);
+				PrintMessage(obj.message.Meldung);
  			// Send response in callback if required
 			//if (obj.callback) 
 			//	this.sendTo(obj.from, obj.command, "Message received", obj.callback);
@@ -204,7 +175,35 @@ if (require.main !== module) {
 	new Cubinote();
 }
 
+function PrintMessage(message) {
+	var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
+	var url = 'http://api.cubinote.com/home/printpaper' +
+		'?appID=' + this.config.AppId + 
+		'&ak=' + this.config.AccessKey + 
+		'&timestamp=' + timestamp + 
+		'&deviceID=' + this.config.DeviceId + 
+		'&bindID=' + this.config.BindId +
+		'&printcontent=T:';
+	
+	message = WordWrap(message, 32);
+	var base64 = new Buffer(message).toString('base64');
+
+	adapter.log.info(url + base64);	
+	request({url:url + base64}, 
+		function (error, response, body) {
+			adapter.log.info(body);	
+		});
+}
+
 function WordWrap(text, max) {
+	text = text.replaceAll('Ä', 'Ae');
+	text = text.replaceAll('ä', 'ae');
+	text = text.replaceAll('Ö', 'Oe');
+	text = text.replaceAll('ö', 'oe');
+	text = text.replaceAll('Ü', 'Ue');
+	text = text.replaceAll('ü', 'ue');
+	text = text.replaceAll('ß', 'ss');
+		
 	var lines = text.split('\n');
 	text = '';
 	lines.forEach(function(line) {
