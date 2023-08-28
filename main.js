@@ -162,7 +162,7 @@ class Cubinote extends utils.Adapter {
 		}
 	}
 
-	PrintMessage(message) {
+	function PrintMessage(message) {
 		var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
 		var url = 'http://api.cubinote.com/home/printpaper' +
 			'?appID=' + this.config.AppId + 
@@ -182,7 +182,7 @@ class Cubinote extends utils.Adapter {
 			});
 	}
 	
-	WordWrap(text, max) {
+	function WordWrap(text, max) {
 		text = text.replaceAll('Ä', 'Ae');
 		text = text.replaceAll('ä', 'ae');
 		text = text.replaceAll('Ö', 'Oe');
