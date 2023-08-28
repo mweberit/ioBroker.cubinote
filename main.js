@@ -179,11 +179,11 @@ class Cubinote extends utils.Adapter {
 	 * @param {ioBroker.Message} obj
 	 */
 	onMessage(obj) {
-		this.log.info(obj.command + " -> " + obj.message);
+		//this.log.info(obj.command + " -> " + obj.message);
 		if (typeof obj === "object" && obj.message) {
 			if (obj.command === "send") {
 				// e.g. send email or pushover or whatever
-				this.log.info("send command");
+				this.log.info("send command " + obj.message);
  			// Send response in callback if required
 			//if (obj.callback) 
 			//	this.sendTo(obj.from, obj.command, "Message received", obj.callback);
