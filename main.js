@@ -161,53 +161,6 @@ class Cubinote extends utils.Adapter {
 			}
 		}
 	}
-
-	function PrintMessage(message) {
-		var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
-		var url = 'http://api.cubinote.com/home/printpaper' +
-			'?appID=' + this.config.AppId + 
-			'&ak=' + this.config.AccessKey + 
-			'&timestamp=' + timestamp + 
-			'&deviceID=' + this.config.DeviceId + 
-			'&bindID=' + this.config.BindId +
-			'&printcontent=T:';
-		
-		message = WordWrap(message, 32);
-		var base64 = new Buffer(message).toString('base64');
-	
-		adapter.log.info(url + base64);	
-		request({url:url + base64}, 
-			function (error, response, body) {
-				adapter.log.info(body);	
-			});
-	}
-	
-	function WordWrap(text, max) {
-		text = text.replaceAll('Ä', 'Ae');
-		text = text.replaceAll('ä', 'ae');
-		text = text.replaceAll('Ö', 'Oe');
-		text = text.replaceAll('ö', 'oe');
-		text = text.replaceAll('Ü', 'Ue');
-		text = text.replaceAll('ü', 'ue');
-		text = text.replaceAll('ß', 'ss');
-			
-		var lines = text.split('\n');
-		text = '';
-		lines.forEach(function(line) {
-			while (line.length > max) {
-				var lio = line.substring(0, max + 1).lastIndexOf(' ');
-				if (lio > 0) {
-					text = text + line.substring(0, lio) + '\n'
-					line = line.substring(lio + 1);
-				} else {
-					text = text + line.substring(0, max) + '\n'
-					line = line.substring(max + 1);
-				}
-			}
-			text = text + line + '\n';
-		});
-		return text;
-	}
 }
 
 if (require.main !== module) {
@@ -221,3 +174,49 @@ if (require.main !== module) {
 	new Cubinote();
 }
 
+function PrintMessage(message) {
+	var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
+	var url = 'http://api.cubinote.com/home/printpaper' +
+		'?appID=' + adapter.config.AppId + 
+		'&ak=' + adapter.config.AccessKey + 
+		'&timestamp=' + timestamp + 
+		'&deviceID=' + adapter.config.DeviceId + 
+		'&bindID=' + adapter.config.BindId +
+		'&printcontent=T:';
+	
+	message = WordWrap(message, 32);
+	var base64 = new Buffer(message).toString('base64');
+
+	adapter.log.info(url + base64);	
+	request({url:url + base64}, 
+		function (error, response, body) {
+			adapter.log.info(body);	
+		});
+}
+
+function WordWrap(text, max) {
+	text = text.replaceAll('Ä', 'Ae');
+	text = text.replaceAll('ä', 'ae');
+	text = text.replaceAll('Ö', 'Oe');
+	text = text.replaceAll('ö', 'oe');
+	text = text.replaceAll('Ü', 'Ue');
+	text = text.replaceAll('ü', 'ue');
+	text = text.replaceAll('ß', 'ss');
+		
+	var lines = text.split('\n');
+	text = '';
+	lines.forEach(function(line) {
+		while (line.length > max) {
+			var lio = line.substring(0, max + 1).lastIndexOf(' ');
+			if (lio > 0) {
+				text = text + line.substring(0, lio) + '\n'
+				line = line.substring(lio + 1);
+			} else {
+				text = text + line.substring(0, max) + '\n'
+				line = line.substring(max + 1);
+			}
+		}
+		text = text + line + '\n';
+	});
+	return text;
+}
