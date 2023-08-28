@@ -136,37 +136,35 @@ class Cubinote extends utils.Adapter {
 		if (state.val != "" && id.endsWith(".printMessage")) {
 			var print = state.val;
 			var timestamp = new Date(Date.now()).toISOString().replace('T', ' ').substring(0, 20); // 2021-02-23%2019:43:56
-var url = 'http://api.cubinote.com/home/printpaper' +
-'?appID=' + this.config.AppId + 
-'&ak=' + this.config.AccessKey + 
-'&timestamp=' + timestamp + 
-'&deviceID=' + this.config.DeviceId + 
-'&bindID=' + this.config.BindId +
-'&printcontent=T:';
-
-print = print.replaceAll('Ä', 'Ae');
-print = print.replaceAll('ä', 'ae');
-print = print.replaceAll('Ö', 'Oe');
-print = print.replaceAll('ö', 'oe');
-print = print.replaceAll('Ü', 'Ue');
-print = print.replaceAll('ü', 'ue');
-print = print.replaceAll('ß', 'ss');
+			var url = 'http://api.cubinote.com/home/printpaper' +
+			'?appID=' + this.config.AppId + 
+			'&ak=' + this.config.AccessKey + 
+			'&timestamp=' + timestamp + 
+			'&deviceID=' + this.config.DeviceId + 
+			'&bindID=' + this.config.BindId +
+			'&printcontent=T:';
 			
-print = WordWrap(print, 32);
-
-var base64 = new Buffer(print).toString('base64');
-			this.log.info(url + base64);	
-request({url:url + base64},
-    function (error, response, body) {
-	    adapter.log.info(body);	
-	    //adapter.setStateAsync("printMessage", { val: '', ack: true });
-				        //log('1. request');
-				        //log('error: ' + error);
-				        //log('response: ' + JSON.stringify(response));
-				        //log('body: ' + body);
-    })
-
+			print = print.replaceAll('Ä', 'Ae');
+			print = print.replaceAll('ä', 'ae');
+			print = print.replaceAll('Ö', 'Oe');
+			print = print.replaceAll('ö', 'oe');
+			print = print.replaceAll('Ü', 'Ue');
+			print = print.replaceAll('ü', 'ue');
+			print = print.replaceAll('ß', 'ss');
+						
+			print = WordWrap(print, 32);
 			
+			var base64 = new Buffer(print).toString('base64');
+						this.log.info(url + base64);	
+			request({url:url + base64},
+			    function (error, response, body) {
+				    adapter.log.info(body);	
+				    //adapter.setStateAsync("printMessage", { val: '', ack: true });
+							        //log('1. request');
+							        //log('error: ' + error);
+							        //log('response: ' + JSON.stringify(response));
+							        //log('body: ' + body);
+			    })
 			}
 		} else {
 			// The state was deleted
@@ -175,22 +173,22 @@ request({url:url + base64},
 	}
 
 	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-	// /**
-	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-	//  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-	//  * @param {ioBroker.Message} obj
-	//  */
-	// onMessage(obj) {
-	// 	if (typeof obj === "object" && obj.message) {
-	// 		if (obj.command === "send") {
-	// 			// e.g. send email or pushover or whatever
-	// 			this.log.info("send command");
-
-	// 			// Send response in callback if required
-	// 			if (obj.callback) this.sendTo(obj.from, obj.command, "Message received", obj.callback);
-	// 		}
-	// 	}
-	// }
+	/**
+	 * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
+	 * Using this method requires "common.messagebox" property to be set to true in io-package.json
+	 * @param {ioBroker.Message} obj
+	 */
+	onMessage(obj) {
+		if (typeof obj === "object" && obj.message) {
+			if (obj.command === "send") {
+				// e.g. send email or pushover or whatever
+				this.log.info("send command");
+ 			// Send response in callback if required
+			//if (obj.callback) 
+			//	this.sendTo(obj.from, obj.command, "Message received", obj.callback);
+			//}
+		}
+	}
 
 }
 
@@ -206,40 +204,21 @@ if (require.main !== module) {
 }
 
 function WordWrap(text, max) {
-
-var lines = text.split('\n');
-
-text = '';
-
-
-lines.forEach(function(line) {
-
-while (line.length > max) {
-
-var lio = line.substring(0, max + 1).lastIndexOf(' ');
-
-if (lio > 0) {
-
-text = text + line.substring(0, lio) + '\n'
-
-line = line.substring(lio + 1);
-
-} else {
-
-text = text + line.substring(0, max) + '\n'
-
-line = line.substring(max + 1);
-
-}
-
-}
-
-text = text + line + '\n';
-
-});
-
-
-return text;
-
+	var lines = text.split('\n');
+	text = '';
+	lines.forEach(function(line) {
+		while (line.length > max) {
+			var lio = line.substring(0, max + 1).lastIndexOf(' ');
+			if (lio > 0) {
+				text = text + line.substring(0, lio) + '\n'
+				line = line.substring(lio + 1);
+			} else {
+				text = text + line.substring(0, max) + '\n'
+				line = line.substring(max + 1);
+			}
+		}
+		text = text + line + '\n';
+	});
+	return text;
 }
 
